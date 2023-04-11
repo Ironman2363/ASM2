@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // giới hạn kích thước file tải lên là 2MB
+  limits: { fileSize: 2 * 1024 * 1024 },
 });
 
 app.post("/dangkyAdmin", upload.single("image"), async (req, res) => {
@@ -336,7 +336,6 @@ app.post(
         await sp.save();
         res.redirect("/admin/getAllProducts");
       } else {
-        // thực hiện đoạn code khi không có path
         const sp = new product({
           code_product,
           name_product,

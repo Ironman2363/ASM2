@@ -8,8 +8,6 @@ const path = require("path");
 var jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const bodyParser = require("body-parser");
-// const passport = require('passport');
-// const LocalStrategy = require('passport-local').Strategy;
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -34,13 +32,13 @@ const storage = multer.diskStorage({
     cb(
       null,
       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    ); // tên file
+    );
   },
 });
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // giới hạn kích thước file tải lên là 2MB
+  limits: { fileSize: 2 * 1024 * 1024 }, 
 });
 
 app.post("/dangkyAdmin", upload.single("image"), async (req, res) => {
@@ -50,7 +48,7 @@ app.post("/dangkyAdmin", upload.single("image"), async (req, res) => {
     const password = req.body.passWord;
     const name = req.body.name;
     const role = req.body.role;
-    const filename = req.file ? req.file.filename : null; // kiểm tra xem req.file có tồn tại hay không
+    const filename = req.file ? req.file.filename : null;
     const checkEmail = await Admin.findOne({ email: email });
     if (checkEmail) {
       const err = "Email đã tồn tại !";
@@ -100,7 +98,6 @@ app.post("/login", async (req, res) => {
     } else {
       user.comparePassword(req.body.passWord, function (err, isMatch) {
         if (!err && isMatch) {
-          // if user is found and password is right create a token
           const token = jwt.sign({ user }, "nodeauthsecret", {
             expiresIn: "15m",
           });
@@ -162,9 +159,6 @@ app.get("/getUsers", verifyToken, async (req, res) => {
   try {
     const users = await Admin.find({});
     res.json(users);
-    //   res.render("managerUser", {
-    //      users: users.map(user => user.toJSON()),
-    //   })
   } catch (error) {
     console.log(error);
   }
